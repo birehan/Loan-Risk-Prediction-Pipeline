@@ -3,3 +3,9 @@ matplotlib
 seaborn
 scikit-learn
 lightgbm
+mlflow
+boto3
+flaml
+graphviz
+google-cloud-storage
+kubernetes
