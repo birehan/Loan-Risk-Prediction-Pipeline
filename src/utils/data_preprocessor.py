@@ -9,6 +9,8 @@ from sklearn.impute import SimpleImputer
 from sklearn.model_selection import train_test_split
 import numpy as np
 import logging
+import os
+import json
 
 # Set up logging
 logging.basicConfig(
@@ -17,7 +19,7 @@ logging.basicConfig(
 
 
 class DataPreprocessor:
-    def __init__(self, df):
+    def __init__(self, df,  cat_file="/src/categories.json"):
         """
         Initialize the DataPreprocessor with a DataFrame.
         :param df: Input DataFrame to preprocess.
@@ -26,6 +28,8 @@ class DataPreprocessor:
         self.encoders = {}
         self.scalers = {}
         self.imputers = {}
+        self.cat_file = cat_file
+
     
     def change_data_type(self, columns, dtype):
         """
@@ -225,6 +229,64 @@ class DataPreprocessor:
             else:
                 logging.warning(f"Column {col} not found in DataFrame.")
         return self
+    
+    
+    def save_or_load_categories(self, categorical_columns):
+        """
+        Save unique values of categorical columns from the DataFrame to a file or load them from an existing file.
+        If new values exist in the columns, they are added to the existing file.
+        :param categorical_columns: List of categorical columns in the dataset.
+        :return: Dictionary of categorical columns with their possible unique values.
+        """
+        if os.path.exists(self.cat_file):
+            # Load categories from the file
+            logging.info(f"Loading categories from {self.cat_file}")
+            with open(self.cat_file, 'r') as f:
+                categories = json.load(f)
+            
+            # Check if new values exist in the columns and add them
+            updated = False
+            for col in categorical_columns:
+                if col in self.df.columns:
+                    # Get unique values from the column in the dataframe
+                    unique_values = set(self.df[col].unique().tolist())
+                    
+                    # Compare with the existing categories
+                    if col in categories:
+                        existing_values = set(categories[col])
+                        new_values = unique_values - existing_values
+                        
+                        if new_values:
+                            categories[col].extend(new_values)
+                            updated = True
+                            logging.info(f"Added new values {new_values} to the existing categories of column: {col}")
+                    else:
+                        # If the column is not in the existing categories, add it
+                        categories[col] = list(unique_values)
+                        updated = True
+                        logging.info(f"Added new column {col} with values {unique_values} to the categories file.")
+            
+            # If any updates were made, save the updated categories
+            if updated:
+                with open(self.cat_file, 'w') as f:
+                    json.dump(categories, f)
+                    logging.info(f"Updated categories saved to {self.cat_file}.")
+        else:
+            # Extract unique values from the categorical columns and save them
+            logging.info(f"Categories file {self.cat_file} not found, creating it.")
+            categories = {col: self.df[col].unique().tolist() for col in categorical_columns}
+            with open(self.cat_file, 'w') as f:
+                json.dump(categories, f)
+                logging.info(f"Created new categories file {self.cat_file} with values from the dataframe.")
+
+        # Assign categories to the respective columns in the dataframe
+        for col, cat_values in categories.items():
+            if col in self.df.columns:
+                self.df[col] = pd.Categorical(self.df[col], categories=cat_values)
+                logging.info(f"Categorical column {col} has been set with categories from the file.")
+        
+        return self
+
 
     def scale_columns(self, columns=None, method="standard"):
         if columns is None:
