@@ -8,18 +8,24 @@ import lightgbm as lgb
 import logging
 import mlflow
 import mlflow.lightgbm
+from mlflow.models.signature import infer_signature
+import os
+import json
+
+from src.utils.utils import determine_version, update_version_file
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
 class LightGBMAutoML:
-    def __init__(self, X_train, X_test, y_train, y_test):
+    def __init__(self, X_train, X_test, y_train, y_test, init_model=None):
         """
         Initialize the AutoML model with pre-split data.
         :param X_train: Training feature set.
         :param X_test: Testing feature set.
         :param y_train: Training target set.
         :param y_test: Testing target set.
+        :param init_model: Initial AutoML model (optional), used for versioning.
         """
         self.X_train = X_train
         self.X_test = X_test
@@ -27,6 +33,10 @@ class LightGBMAutoML:
         self.y_test = y_test
         self.automl = AutoML()
         self.model = None
+        self.version = determine_version()
+        self.run_id = None
+
+
 
     def print_auto_logged_info(self, run):
         """
@@ -48,49 +58,7 @@ class LightGBMAutoML:
         print(f"params: {run.data.params}")
         print(f"metrics: {run.data.metrics}")
         print(f"tags: {tags}")
-            
-    # def train_model(self, time_budget=240):
-        # """
-        # Train the AutoML model using the training data for multi-class classification.
-        # :param time_budget: Total time budget for the training in seconds.
-        # :param n_trials: Number of trials to run for hyperparameter tuning.
-        # """
-        # logging.info("Starting AutoML training for multi-class classification...")        
-        
-        # # Enable MLflow autologging
-        # mlflow.lightgbm.autolog()
 
-        # # AutoML settings for multi-class classification
-        # settings = {
-        #     "time_budget": time_budget,  # total running time in seconds
-        #     "metric": "accuracy",  # primary metric for multi-class classification
-        #     "estimator_list": ["lgbm"],  # list of ML learners; we use lightgbm here
-        #     "task": "classification",  # task type
-        #     "log_file_name": "multi_class_experiment.log",  # log file
-        #     "seed": 7654321,  # random seed
-        # }        
-        # # eval_set = [(self.X_test,self.y_test),(self.X_train,self.y_train)]
-        
-        # with mlflow.start_run() as run:
-        #     # Fit the AutoML model
-        #     self.automl.fit(X_train=self.X_train, y_train=self.y_train, **settings)
-        #     # , eval_set=eval_set, eval_metric='logloss'            
-        #     self.model = self.automl.model
-                        
-        #     # Print auto-logged information
-        #     self.print_auto_logged_info(run)
-            
-            
-        #     # Log accuracy
-        #     y_pred = self.automl.predict(self.X_test)
-        #     accuracy = accuracy_score(self.y_test, y_pred)
-        #     mlflow.log_metric("accuracy", accuracy)
-
-        #     # Register the model
-        #     mlflow.lightgbm.log_model(self.automl.model, "model")
-                        
-        #     logging.info(f"Best model found: {self.automl.best_estimator}")
-    
     def train_model(self, time_budget=240):
         """
         Train the AutoML model using the training data for multi-class classification.
@@ -103,21 +71,16 @@ class LightGBMAutoML:
 
         # AutoML settings for multi-class classification
         settings = {
-            "time_budget": time_budget,  # total running time in seconds
-            "metric": "accuracy",  # primary metric for multi-class classification
-            "estimator_list": ["lgbm"],  # list of ML learners; we use lightgbm here
-            "task": "classification",  # task type
-            "log_file_name": "multi_class_experiment.log",  # log file
-            "seed": 7654321,  # random seed
+            "time_budget": time_budget,
+            "metric": "accuracy",
+            "estimator_list": ["lgbm"],
+            "task": "classification",
+            "log_file_name": "multi_class_experiment.log",
+            "seed": 7654321,
         }
 
         # Specify categorical features
-        categorical_features = [col for col in self.X_train.columns if self.X_train[col].dtype == 'object']
-        
-        # Ensure categorical features are consistent in both train and test sets
-        for col in categorical_features:
-            self.X_train[col] = self.X_train[col].astype('category')
-            self.X_test[col] = self.X_test[col].astype('category')
+        categorical_features = [col for col in self.X_train.columns if self.X_train[col].dtype == 'category']
 
         with mlflow.start_run() as run:
             # Fit the AutoML model
@@ -127,16 +90,28 @@ class LightGBMAutoML:
 
             # Print auto-logged information
             self.print_auto_logged_info(run)
+            
+            self.run_id = run.info.run_id
 
             # Log accuracy
             y_pred = self.automl.predict(self.X_test)
             accuracy = accuracy_score(self.y_test, y_pred)
             mlflow.log_metric("accuracy", accuracy)
 
-            # Register the model
-            mlflow.lightgbm.log_model(self.automl.model, "model")
-                        
+            #
+            input_example = self.X_test.iloc[:1]
+            signature = infer_signature(input_example, self.automl.predict(input_example))
+
+            # Register the model with versioning
+            mlflow.lightgbm.log_model(self.automl, "model", signature=signature, input_example=input_example)
+            mlflow.log_param("version", self.version)  # Log the version
+            
             logging.info(f"Best model found: {self.automl.best_estimator}")
+            logging.info(f"Model version {self.version} registered and logged.")
+            
+
+            # Update version file after successful training
+            update_version_file(self.version)
 
     def evaluate_model(self):
         """
