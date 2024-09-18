@@ -10,7 +10,7 @@ from src.utils.model_trainer import LightGBMAutoML
 
 if __name__ == "__main__":
     
-    loan_filepath = "data/loan.csv"
+    loan_filepath = "data/sample_loan.csv"
     loan_df = DataExtractor.extract_csv(file_path=loan_filepath)
 
     pre_processor = DataPreprocessor(loan_df)
