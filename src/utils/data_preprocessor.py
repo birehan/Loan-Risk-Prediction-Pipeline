@@ -19,7 +19,7 @@ logging.basicConfig(
 
 
 class DataPreprocessor:
-    def __init__(self, df,  cat_file="/src/categories.json"):
+    def __init__(self, df,  cat_file="src/categories.json"):
         """
         Initialize the DataPreprocessor with a DataFrame.
         :param df: Input DataFrame to preprocess.
