@@ -1,3 +1,6 @@
 /data/
 /dictionaries/
 /Documentation/
+/mlruns/
+!/data/sample_loan.csv
+**/__pycache__/
