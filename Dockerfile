@@ -1,8 +1,12 @@
+
 # Use the official Python image from the Docker Hub
 FROM python:3.8-slim
 
 # Set the working directory
 WORKDIR /app
+
+# Install libgomp1
+RUN apt-get update && apt-get install -y libgomp1
 
 # Copy the requirements file from the specified model path
 ARG MODEL_PATH
