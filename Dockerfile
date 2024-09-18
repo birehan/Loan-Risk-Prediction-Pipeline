@@ -1,4 +1,3 @@
-
 # Use the official Python image from the Docker Hub
 FROM python:3.8-slim
 
@@ -21,5 +20,5 @@ COPY ${MODEL_PATH} .
 # Expose the port that MLflow will run on
 EXPOSE 5000
 
-# Set the entry point to run the MLflow server
-CMD ["mlflow", "models", "serve", "-m", ".", "-p", "5000", "--no-conda"]
+# Set the entry point to run the MLflow server and bind it to 0.0.0.0
+CMD ["mlflow", "models", "serve", "-m", ".", "-h", "0.0.0.0", "-p", "5000", "--no-conda"]
