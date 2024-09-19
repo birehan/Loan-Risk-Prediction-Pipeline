@@ -5,16 +5,11 @@ PATCH=0
 VERSION=$(MAJOR).$(MINOR).$(PATCH)
 
 # Docker image variables
-IMAGE_NAME=birehananteneh/mlflow-model
+IMAGE_NAME=birehananteneh/loan-risk-predictor
 TAG=$(VERSION)
 PORT=5000
-MODEL_PATH=notebooks/mlruns/0/ff624604f8eb44d59b1211e52f1fe564/artifacts/model
-DOCKER_USERNAME=birehananteneh
-DOCKER_PASSWORD=
+MODEL_PATH=mlruns/0/65d4f649121040f8aa5e9851b0a386e7/artifacts/model
 
-# Log in to Docker Hub
-login:
-	echo "$(DOCKER_PASSWORD)" | docker login -u "$(DOCKER_USERNAME)" --password-stdin
 
 # Build the Docker image with version tag
 build:

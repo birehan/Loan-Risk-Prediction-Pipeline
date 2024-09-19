@@ -1,0 +1,254 @@
+{
+    "loan_schema": {
+        "loanId": {
+            "dtype": "object"
+        },
+        "anon_ssn": {
+            "dtype": "object"
+        },
+        "payFrequency": {
+            "dtype": "object"
+        },
+        "apr": {
+            "dtype": "float64"
+        },
+        "applicationDate": {
+            "dtype": "object"
+        },
+        "originated": {
+            "dtype": "bool"
+        },
+        "originatedDate": {
+            "dtype": "object"
+        },
+        "nPaidOff": {
+            "dtype": "float64"
+        },
+        "approved": {
+            "dtype": "bool"
+        },
+        "isFunded": {
+            "dtype": "int64"
+        },
+        "loanStatus": {
+            "dtype": "object"
+        },
+        "loanAmount": {
+            "dtype": "float64"
+        },
+        "originallyScheduledPaymentAmount": {
+            "dtype": "float64"
+        },
+        "state": {
+            "dtype": "object"
+        },
+        "leadType": {
+            "dtype": "object"
+        },
+        "leadCost": {
+            "dtype": "int64"
+        },
+        "fpStatus": {
+            "dtype": "object"
+        },
+        "clarityFraudId": {
+            "dtype": "object"
+        },
+        "hasCF": {
+            "dtype": "int64"
+        }
+    },
+    "payment_schema": {
+        "loanId": {
+            "dtype": "object"
+        },
+        "installmentIndex": {
+            "dtype": "int64"
+        },
+        "isCollection": {
+            "dtype": "bool"
+        },
+        "paymentDate": {
+            "dtype": "object"
+        },
+        "principal": {
+            "dtype": "float64"
+        },
+        "fees": {
+            "dtype": "float64"
+        },
+        "paymentAmount": {
+            "dtype": "float64"
+        },
+        "paymentStatus": {
+            "dtype": "object"
+        },
+        "paymentReturnCode": {
+            "dtype": "object"
+        }
+    },
+    "underwriting_schema": {
+        ".underwritingdataclarity.clearfraud.clearfraudinquiry.thirtydaysago": {
+            "dtype": "float64"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudinquiry.twentyfourhoursago": {
+            "dtype": "float64"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudinquiry.oneminuteago": {
+            "dtype": "float64"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudinquiry.onehourago": {
+            "dtype": "float64"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudinquiry.ninetydaysago": {
+            "dtype": "float64"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudinquiry.sevendaysago": {
+            "dtype": "float64"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudinquiry.tenminutesago": {
+            "dtype": "float64"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudinquiry.fifteendaysago": {
+            "dtype": "float64"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudinquiry.threesixtyfivedaysago": {
+            "dtype": "float64"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudindicator.inquiryonfilecurrentaddressconflict": {
+            "dtype": "object"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudindicator.totalnumberoffraudindicators": {
+            "dtype": "float64"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudindicator.telephonenumberinconsistentwithaddress": {
+            "dtype": "object"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudindicator.inquiryageyoungerthanssnissuedate": {
+            "dtype": "object"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudindicator.onfileaddresscautious": {
+            "dtype": "object"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudindicator.inquiryaddressnonresidential": {
+            "dtype": "object"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudindicator.onfileaddresshighrisk": {
+            "dtype": "object"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudindicator.ssnreportedmorefrequentlyforanother": {
+            "dtype": "object"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudindicator.currentaddressreportedbytradeopenlt90days": {
+            "dtype": "object"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudindicator.inputssninvalid": {
+            "dtype": "object"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudindicator.inputssnissuedatecannotbeverified": {
+            "dtype": "object"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudindicator.inquiryaddresscautious": {
+            "dtype": "object"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudindicator.morethan3inquiriesinthelast30days": {
+            "dtype": "object"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudindicator.onfileaddressnonresidential": {
+            "dtype": "object"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudindicator.creditestablishedpriortossnissuedate": {
+            "dtype": "object"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudindicator.driverlicenseformatinvalid": {
+            "dtype": "object"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudindicator.inputssnrecordedasdeceased": {
+            "dtype": "object"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudindicator.inquiryaddresshighrisk": {
+            "dtype": "object"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudindicator.inquirycurrentaddressnotonfile": {
+            "dtype": "object"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudindicator.bestonfilessnissuedatecannotbeverified": {
+            "dtype": "object"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudindicator.highprobabilityssnbelongstoanother": {
+            "dtype": "object"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudindicator.maxnumberofssnswithanybankaccount": {
+            "dtype": "float64"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudindicator.bestonfilessnrecordedasdeceased": {
+            "dtype": "object"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudindicator.currentaddressreportedbynewtradeonly": {
+            "dtype": "object"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudindicator.creditestablishedbeforeage18": {
+            "dtype": "object"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudindicator.telephonenumberinconsistentwithstate": {
+            "dtype": "object"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudindicator.driverlicenseinconsistentwithonfile": {
+            "dtype": "object"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudindicator.workphonepreviouslylistedascellphone": {
+            "dtype": "object"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudindicator.workphonepreviouslylistedashomephone": {
+            "dtype": "object"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudidentityverification.ssnnamematch": {
+            "dtype": "object"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudidentityverification.nameaddressmatch": {
+            "dtype": "object"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudidentityverification.phonematchtype": {
+            "dtype": "object"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudidentityverification.ssnnamereasoncodedescription": {
+            "dtype": "object"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudidentityverification.phonematchresult": {
+            "dtype": "object"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudidentityverification.nameaddressreasoncodedescription": {
+            "dtype": "object"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudidentityverification.phonematchtypedescription": {
+            "dtype": "object"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudidentityverification.overallmatchresult": {
+            "dtype": "object"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudidentityverification.phonetype": {
+            "dtype": "object"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudidentityverification.ssndobreasoncode": {
+            "dtype": "object"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudidentityverification.ssnnamereasoncode": {
+            "dtype": "object"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudidentityverification.nameaddressreasoncode": {
+            "dtype": "object"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudidentityverification.ssndobmatch": {
+            "dtype": "object"
+        },
+        ".underwritingdataclarity.clearfraud.clearfraudidentityverification.overallmatchreasoncode": {
+            "dtype": "float64"
+        },
+        "clearfraudscore": {
+            "dtype": "float64"
+        },
+        "underwritingid": {
+            "dtype": "object"
+        }
+    }
+}

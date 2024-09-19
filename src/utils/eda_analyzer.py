@@ -148,28 +148,58 @@ class EDAAnalyzer:
                 plt.title(f"Outlier Detection - {col}")
                 plt.show()
 
-    def distribution_plots(self, columns=None):
+    # def distribution_plots(self, columns=None, top_n=10):
+    #     """
+    #     Plot distributions for numeric and categorical features.
+    #     :param columns: List of columns to plot. If None, all columns are plotted.
+    #     """
+    #     logging.info("Generating distribution plots...")
+
+    #     if columns is None:
+    #         columns = self.df.columns.tolist()
+
+    #     for col in columns:
+    #         if pd.api.types.is_numeric_dtype(self.df[col]):
+    #             plt.figure(figsize=(8, 4))
+    #             sns.histplot(self.df[col], kde=True)
+    #             plt.title(f"Distribution of {col}")
+    #             plt.show()
+    #         elif pd.api.types.is_categorical_dtype(self.df[col]) or pd.api.types.is_object_dtype(self.df[col]):
+    #             plt.figure(figsize=(8, 4))
+    #             sns.countplot(data=self.df, x=col)
+    #             plt.title(f"Distribution of {col}")
+    #             plt.xticks(rotation=45)
+    #             plt.show()
+    
+    def distribution_plots(self, columns=None, top_n=10):
         """
-        Plot distributions for numeric and categorical features.
-        :param columns: List of columns to plot. If None, all columns are plotted.
+       Plot distributions for numeric and categorical features, limiting to top n categories for categorical features.
+       :param columns: List of columns to plot. If None, all columns are plotted.
+       :param top_n: Number of top categories/numeric columns to plot. Default is 10.
         """
         logging.info("Generating distribution plots...")
 
         if columns is None:
             columns = self.df.columns.tolist()
 
-        for col in columns:
-            if pd.api.types.is_numeric_dtype(self.df[col]):
-                plt.figure(figsize=(8, 4))
-                sns.histplot(self.df[col], kde=True)
-                plt.title(f"Distribution of {col}")
-                plt.show()
-            elif pd.api.types.is_categorical_dtype(self.df[col]) or pd.api.types.is_object_dtype(self.df[col]):
-                plt.figure(figsize=(8, 4))
-                sns.countplot(data=self.df, x=col)
-                plt.title(f"Distribution of {col}")
-                plt.xticks(rotation=45)
-                plt.show()
+        # Limit numeric columns to top_n
+        numeric_cols = [col for col in columns if pd.api.types.is_numeric_dtype(self.df[col])][:top_n]
+        categorical_cols = [col for col in columns if pd.api.types.is_categorical_dtype(self.df[col]) or pd.api.types.is_object_dtype(self.df[col])]
+
+        for col in numeric_cols:
+            plt.figure(figsize=(8, 4))
+            sns.histplot(self.df[col], kde=True)
+            plt.title(f"Distribution of {col}")
+            plt.show()
+
+        for col in categorical_cols:
+            plt.figure(figsize=(8, 4))
+            top_categories = self.df[col].value_counts().nlargest(top_n).index
+            sns.countplot(data=self.df[self.df[col].isin(top_categories)], x=col, order=top_categories)
+            plt.title(f"Top {top_n} Distribution of {col}")
+            plt.xticks(rotation=45)
+            plt.show()
+        
 
     def pairplot(self, hue=None):
         """

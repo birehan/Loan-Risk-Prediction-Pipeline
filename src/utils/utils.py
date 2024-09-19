@@ -48,9 +48,52 @@ def add_is_repeat_customer(df, ssn_col='anon_ssn'):
     
     return df
 
-# version_utils.py
+
+def merge_data(loan_df, payment_df, underwriting_df) -> pd.DataFrame:
+    payment_df = payment_df.groupby('loanId').agg({
+    'installmentIndex': 'max',  # Example: Keep the max installmentIndex
+    'isCollection': 'first',    # Example: Take the first value (if it's boolean)
+    'paymentDate': 'last',     # Take the first date (you can use 'min' if you want the earliest date)
+    'principal': 'sum',         # Sum the principal amounts
+    'fees': 'sum',              # Sum the fees
+    'paymentAmount': 'sum',     # Sum the payment amounts
+    'paymentStatus': 'last',   # Take the first payment status
+    'paymentReturnCode': 'last'  # Take the first return code
+    }).reset_index()
 
 
+    selected_columns = [
+        'underwritingid',
+        'clearfraudscore',
+        '.underwritingdataclarity.clearfraud.clearfraudinquiry.thirtydaysago',
+        '.underwritingdataclarity.clearfraud.clearfraudindicator.totalnumberoffraudindicators',
+        '.underwritingdataclarity.clearfraud.clearfraudidentityverification.ssnnamematch',
+        '.underwritingdataclarity.clearfraud.clearfraudidentityverification.nameaddressmatch',
+        '.underwritingdataclarity.clearfraud.clearfraudidentityverification.phonematchresult',
+        '.underwritingdataclarity.clearfraud.clearfraudidentityverification.overallmatchresult',
+        '.underwritingdataclarity.clearfraud.clearfraudidentityverification.ssndobmatch',
+    ]
+
+
+    underwriting_df = underwriting_df[selected_columns]
+
+    underwriting_df = underwriting_df.rename(columns={
+        '.underwritingdataclarity.clearfraud.clearfraudindicator.totalnumberoffraudindicators': 'totalnumberoffraudindicators',
+        '.underwritingdataclarity.clearfraud.clearfraudinquiry.thirtydaysago': 'thirtydaysago',
+        '.underwritingdataclarity.clearfraud.clearfraudidentityverification.ssnnamematch': 'ssnnamematch',
+        '.underwritingdataclarity.clearfraud.clearfraudidentityverification.nameaddressmatch': 'nameaddressmatch',
+        '.underwritingdataclarity.clearfraud.clearfraudidentityverification.phonematchresult': 'phonematchresult',
+        '.underwritingdataclarity.clearfraud.clearfraudidentityverification.overallmatchresult': 'overallmatchresult',
+        '.underwritingdataclarity.clearfraud.clearfraudidentityverification.ssndobmatch': 'ssndobmatch',
+        'underwritingid': 'clarityFraudId'
+    })
+
+
+    loan_payment_df = pd.merge(loan_df, payment_df, on='loanId', how='left')
+    merged_df = pd.merge(loan_payment_df, underwriting_df, on='clarityFraudId', how='left')
+    merged_df = add_loan_age(merged_df)
+    
+    return merged_df
 
 def determine_version(version_file='version.json', version_control_file='version-control.json'):
     import os

@@ -371,18 +371,37 @@ class DataPreprocessor:
             f"Initial shape: {initial_shape}, Final shape: {final_shape}"
         )
         return self
-
-
+    
     def drop_highly_correlated(self, threshold=0.9):
         """
-        Drop features that are highly correlated to prevent multicollinearity.
+        Drop categorical features (object type) that are highly correlated to prevent multicollinearity.
         :param threshold: Correlation coefficient threshold to drop features.
         """
-        corr_matrix = self.df.corr().abs()
+        # Make a copy of the DataFrame
+        df_encoded = self.df.copy()
+
+        # Encode categorical columns using LabelEncoder
+        label_encoders = {}
+        for col in df_encoded.select_dtypes(include=["object", "category"]).columns:
+            le = LabelEncoder()
+            df_encoded[col] = le.fit_transform(df_encoded[col].astype(str))
+            label_encoders[col] = le
+
+        # Calculate correlation matrix for encoded categorical columns
+        corr_matrix = df_encoded.corr().abs()
+
+        # Get the upper triangle of the correlation matrix to avoid duplicate checks
         upper_triangle = corr_matrix.where(np.triu(np.ones(corr_matrix.shape), k=1).astype(bool))
+
+        # Identify columns to drop based on the correlation threshold
         to_drop = [col for col in upper_triangle.columns if any(upper_triangle[col] > threshold)]
+
+        # Drop the highly correlated columns from the original DataFrame
         self.df.drop(columns=to_drop, inplace=True)
-        logging.info(f"Dropped highly correlated columns: {to_drop}")
+    
+        # Log the dropped columns
+        logging.info(f"Dropped highly correlated categorical columns: {to_drop}")
+    
         return self
 
     def handle_datetime_features(self, columns=None):
