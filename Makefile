@@ -8,7 +8,7 @@ VERSION=$(MAJOR).$(MINOR).$(PATCH)
 IMAGE_NAME=birehananteneh/loan-risk-predictor
 TAG=$(VERSION)
 PORT=5000
-MODEL_PATH=mlruns/0/65d4f649121040f8aa5e9851b0a386e7/artifacts/model
+MODEL_PATH=mlruns/0/39cb1dffeba648cfb07c313ebd631ee7/artifacts/model
 
 
 # Build the Docker image with version tag

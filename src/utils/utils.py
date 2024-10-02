@@ -27,7 +27,7 @@ def add_loan_age(df, from_date='applicationDate', to_date='originatedDate'):
     df['loan_age'] = (df[to_date] - df[from_date]).dt.days
 
     # For rows where to_date is NaN, we can choose to leave it as NaN or fill it with a specific value (e.g., -1 or 0)
-    df['loan_age'] = df['loan_age'].fillna(-1)  # Fill NaN with -1 to indicate non-originated loans
+    df['loan_age'] = df['loan_age'].fillna(0)  # Fill NaN with -1 to indicate non-originated loans
 
     return df
 

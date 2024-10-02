@@ -86,36 +86,9 @@ class DataExtractor:
         :return: DataFrame containing the extracted data.
         """
         try:
-            # Create an S3 client
-            s3_client = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key)
-            obj = s3_client.get_object(Bucket=bucket_name, Key=file_key)
-            file_content = obj['Body'].read().decode('utf-8')
-
-            # Determine file type from the file key
-            if file_key.endswith('.csv'):
-                df = pd.read_csv(StringIO(file_content), **kwargs)
-            elif file_key.endswith('.json'):
-                df = pd.read_json(StringIO(file_content), **kwargs)
-            else:
-                raise ValueError("Unsupported file type. Supported types are 'csv' and 'json'.")
-
+           # TODO: Implementation
             logging.info(f'Extracted data from S3 bucket: {bucket_name}, file: {file_key}')
-            return df
+            return 
         except Exception as e:
             logging.error(f'Error extracting data from S3: {e}')
             raise
-
-# Example usage:
-# if __name__ == "__main__":
-    
-    # Extract data from various sources
-    # csv_data = DataExtractor.extract_csv('../../data/loan.csv')
-    # excel_data = extractor.extract_excel('data.xlsx', sheet_name='Sheet1')
-    # json_data = extractor.extract_json('data.json')
-    # sql_data = extractor.extract_sql('SELECT * FROM table_name', 'database.db')
-    # url_data = extractor.extract_from_url('https://example.com/data.csv', file_type='csv')
-    
-    # # Extract data from S3
-    # s3_data = extractor.extract_from_s3('your-bucket-name', 'path/to/your/file.csv', 
-    #                                       aws_access_key_id='YOUR_ACCESS_KEY', 
-    #                                       aws_secret_access_key='YOUR_SECRET_KEY')
